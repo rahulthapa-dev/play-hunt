@@ -4,6 +4,7 @@
   import { Cog8ToothIcon } from '@heroicons/vue/20/solid'
   import { XMarkIcon } from '@heroicons/vue/20/solid'
   import { ChevronUpDownIcon } from '@heroicons/vue/20/solid'
+  import draggable from 'vuedraggable'
 </script>
 <template>
   <form class="mx-auto w-full max-w-[800px] bg-white rounded-lg">
@@ -168,9 +169,13 @@
   export default {
   data() {
     return {
-      clonedDivs: [] 
+      clonedDivs: [] ,
+      drag: false,
     }
   },
+  components: {
+        draggable,
+    },
   methods: {
     cloneDiv() {
       this.clonedDivs.push({})
