@@ -1,11 +1,3 @@
-<script setup>
-  import { PlusIcon } from '@heroicons/vue/20/solid'
-  import { SparklesIcon } from '@heroicons/vue/20/solid'
-  import { Cog8ToothIcon } from '@heroicons/vue/20/solid'
-  import { XMarkIcon } from '@heroicons/vue/20/solid'
-  import { ChevronUpDownIcon } from '@heroicons/vue/20/solid'
-  import draggable from 'vuedraggable'
-</script>
 <template>
   <form class="mx-auto w-full max-w-[800px] bg-white rounded-lg">
     <div>
@@ -26,7 +18,7 @@
             <label for="website" class="absolute -top-2 left-2 bg-white px-1 block text-xs font-medium leading-6 text-gray-900">Interview Topic</label>
             <div class="mt-2">
               <div class="flex rounded-md shadow-sm ring-1 ring-inset ring-[#d7d7d7] focus-within:ring-1 focus-within:ring-inset focus-within:ring-[#f18024]">
-                <input type="text" name="website" id="website" class="min-h-[40px] block flex-1 border-0 bg-transparent py-1.5 pl-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6" placeholder="www.example.com" />
+                <input type="text" name="website" id="website" class="min-h-[40px] block flex-1 border-0 bg-transparent py-1.5 pl-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6" placeholder="Technology and Software Development" />
               </div>
             </div>
           </div>
@@ -50,7 +42,7 @@
             <button type="button" class="rounded-full bg-[#f18024] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#de6b0e] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f18024]">
               <SparklesIcon class="h-5 w-5" aria-hidden="true" />
             </button>
-            <button type="button"  @click="cloneDiv" class="rounded-full bg-[#f18024] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#de6b0e] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f18024]">
+            <button type="button"  @click="addNewQuestion" class="rounded-full bg-[#f18024] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#de6b0e] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f18024]">
               <PlusIcon class="h-5 w-5" aria-hidden="true" />
             </button>
           </div>
@@ -67,33 +59,22 @@
           </div>
         </div>
         <!--  -->
-        <div class="grid grid-cols-1 px-4 sm:px-6 gap-x-8 md:grid-cols-3 div-clone">
+        
+        <div v-for="(question, index) in questions" :key="index" class="grid grid-cols-1 px-4 sm:px-6 gap-x-8 md:grid-cols-3 div-clone">
           <div class="col-span-full">
             <div class="mt-2 flex rounded-md items-center">
               <ChevronUpDownIcon class="size-6 drag-trigger" />
               <div class="relative flex flex-grow items-stretch focus-within:z-10">
-                <input type="text" class="min-h-[40px] block w-full rounded-none rounded-l-md border-0 py-1.5 pl-2 text-gray-900 ring-1 ring-inset ring-[#d7d7d7] placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-[#f18024] sm:text-sm sm:leading-6" placeholder="https://interviewlink.com" />
+                <input type="text" class="min-h-[40px] block w-full rounded-none rounded-l-md border-0 py-1.5 pl-2 text-gray-900 ring-1 ring-inset ring-[#d7d7d7] placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-[#f18024] sm:text-sm sm:leading-6" :placeholder="question.title" v-model="question.title" />
               </div>
               <button type="button" class="min-h-[40px] relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-full px-3 py-2 text-sm text-[#f18024] hover:text-white hover:bg-[#f18024] ring-inset ring-1 ring-[#f18024]">
                 <Cog8ToothIcon class="size-5" />
               </button>
+              <XMarkIcon v-if="index != 0" @click="removeQuestion(index)" class="size-6 delete-input-group cursor-pointer"/>
             </div>
           </div>
         </div>
-        <div  v-for="(clonedDiv, index) in clonedDivs" :key="index" class="grid grid-cols-1 px-4 sm:px-6 gap-x-8 md:grid-cols-3 div-clone">
-          <div class="col-span-full">
-            <div class="mt-2 flex rounded-md items-center">
-              <ChevronUpDownIcon class="size-6 drag-trigger" />
-              <div class="relative flex flex-grow items-stretch focus-within:z-10">
-                <input type="text" class="min-h-[40px] block w-full rounded-none rounded-l-md border-0 py-1.5 pl-2 text-gray-900 ring-1 ring-inset ring-[#d7d7d7] placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-[#f18024] sm:text-sm sm:leading-6" placeholder="https://interviewlink.com" />
-              </div>
-              <button type="button" class="min-h-[40px] relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-full px-3 py-2 text-sm text-[#f18024] hover:text-white hover:bg-[#f18024] ring-inset ring-1 ring-[#f18024]">
-                <Cog8ToothIcon class="size-5" />
-              </button>
-              <XMarkIcon @click="removeClonedDiv(index)" class="size-6 delete-input-group cursor-pointer"/>
-            </div>
-          </div>
-        </div>
+
         <!--  -->
         <div class="grid grid-cols-1 px-4 sm:px-6 gap-x-8 md:grid-cols-3">
           <div class="col-span-full">
@@ -166,22 +147,38 @@
 </template>
 
 <script>
-  export default {
+import { PlusIcon } from '@heroicons/vue/20/solid'
+import { SparklesIcon } from '@heroicons/vue/20/solid'
+import { Cog8ToothIcon } from '@heroicons/vue/20/solid'
+import { XMarkIcon } from '@heroicons/vue/20/solid'
+import { ChevronUpDownIcon } from '@heroicons/vue/20/solid'
+import draggable from 'vuedraggable';
+
+export default {
   data() {
     return {
-      clonedDivs: [] ,
       drag: false,
+      questions: [{
+        title: "Question title",
+      }]
     }
   },
   components: {
-        draggable,
-    },
+    draggable,
+    PlusIcon,
+    SparklesIcon,
+    Cog8ToothIcon,
+    XMarkIcon,
+    ChevronUpDownIcon,
+  },
   methods: {
-    cloneDiv() {
-      this.clonedDivs.push({})
+    addNewQuestion() {
+      this.questions.push({
+        title: "Question title"
+      })
     },
-    removeClonedDiv(index) {
-      this.clonedDivs.splice(index, 1);
+    removeQuestion(index) {
+      this.questions.splice(index, 1);
     }
   }
 };
